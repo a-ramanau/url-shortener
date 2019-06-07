@@ -3,3 +3,5 @@ jdk:
   - openjdk11
 services:
   - redis-server
+after_success:
+  - ./gradlew jacocoTestReport coveralls
