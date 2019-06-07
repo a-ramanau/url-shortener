@@ -1,0 +1,62 @@
+import com.github.spotbugs.SpotBugsTask
+
+plugins {
+    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'java'
+    id 'checkstyle'
+    id "com.github.spotbugs" version "2.0.0"
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.aramanau'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+checkstyle {
+    toolVersion = '8.19'
+    configDir = file("code_quality/checkstyle")
+}
+
+checkstyleMain {
+    source = 'src/main/java'
+}
+checkstyleTest {
+    source = 'src/test/java'
+}
+
+spotbugs {
+    toolVersion = '4.0.0-beta1'
+    effort = "max"
+}
+
+tasks.withType(SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'redis.clients:jedis:2.9.0'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
